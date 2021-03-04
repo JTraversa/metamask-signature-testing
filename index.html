@@ -27,7 +27,7 @@
         
         <div class="takecolumn w-col w-col-4 w-col-small-small-stack">
 
-          <a href="#" class="authorizebutton2 w-button" type="button" id= "authorizebutton2" onclick="authorizeERC()">Authorize Token</a>
+          <a href="#" class="authorizebutton2 w-button" type="button" id= "authorizebutton2" onclick="approveERC()">Authorize Token</a>
 		  <a data-w-id="01516053-af32-daae-a25d-18c9f4294142" href="#" class="takeofferbutton w-button" id="takeofferbutton" type="button" onclick="createAndTake()">Take Offer</a></div>
       </div><img src="images/LightDefi.png" width="308" alt="" class="image">
     </div>
@@ -83,7 +83,7 @@ const msgParams = {
         name: 'Swivel Finance',
         version: '1.0.0',
         chainId: 5,
-        verifyingContract: '0x6a6BeC42A5Dd6F2766F806F91Ad12034F43b6361'
+        verifyingContract: '0x0000000000000000000000000000000000000000'
       },
 	  message: {
 	  key: makerOrderHash,
@@ -148,9 +148,7 @@ const msgParams = {
     }
 }		
 
-
-
-function authorizeERC (type) {
+function approveERC (type) {
 tokencontract.approve('0x0a9de555D0ce4801834A6Fa460E63Eee8e35F589', '10000000000000000000000000000000000000000000000000', function (error, result) {console.log(result)});
 
 }
