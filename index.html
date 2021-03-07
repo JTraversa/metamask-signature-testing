@@ -29,7 +29,6 @@
 
           <a href="#" class="authorizebutton2 w-button" type="button" id= "authorizebutton2" onclick="approveERC()">Authorize Token</a>
 		  <a data-w-id="01516053-af32-daae-a25d-18c9f4294142" href="#" class="takeofferbutton w-button" id="takeofferbutton" type="button" onclick="createAndTake()">Create/Take</a></div>
-      </div>
     </div>
   </div>
   <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"
@@ -41,15 +40,769 @@
   <script src="js/ethereumjs-util.js"></script>
   <script src="js/ethereumjs-abi.js"></script>
 <script>
-var swivelContractABI = [{"inputs":[{"internalType":"uint256","name":"i","type":"uint256"},{"internalType":"address","name":"c","type":"address"},{"internalType":"address","name":"v","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"key","type":"bytes32"}],"name":"Cancel","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"orderKey","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"agreementKey","type":"bytes32"}],"name":"Initiate","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"orderKey","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"agreementKey","type":"bytes32"}],"name":"Release","type":"event"},{"inputs":[],"name":"CTOKEN","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"DOMAIN","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"NAME","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"VERSION","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"},{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"agreements","outputs":[{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"taker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"bool","name":"released","type":"bool"},{"internalType":"uint256","name":"rate","type":"uint256"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"release","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"bytes32","name":"key","type":"bytes32"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"}],"internalType":"struct Hash.Order[]","name":"o","type":"tuple[]"},{"internalType":"uint256[]","name":"a","type":"uint256[]"},{"internalType":"bytes32","name":"k","type":"bytes32"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Sig.Components[]","name":"c","type":"tuple[]"}],"name":"batchFillFixed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"bytes32","name":"key","type":"bytes32"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"}],"internalType":"struct Hash.Order[]","name":"o","type":"tuple[]"},{"internalType":"uint256[]","name":"a","type":"uint256[]"},{"internalType":"bytes32","name":"k","type":"bytes32"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Sig.Components[]","name":"c","type":"tuple[]"}],"name":"batchFillFloating","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"o","type":"bytes32[]"},{"internalType":"bytes32[]","name":"a","type":"bytes32[]"}],"name":"batchRelease","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"bytes32","name":"key","type":"bytes32"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"}],"internalType":"struct Hash.Order","name":"o","type":"tuple"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Sig.Components","name":"c","type":"tuple"}],"name":"cancel","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"cancelled","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"bytes32","name":"key","type":"bytes32"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"}],"internalType":"struct Hash.Order","name":"o","type":"tuple"},{"internalType":"uint256","name":"a","type":"uint256"},{"internalType":"bytes32","name":"k","type":"bytes32"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Sig.Components","name":"c","type":"tuple"}],"name":"fillFixed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"bytes32","name":"key","type":"bytes32"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"underlying","type":"address"},{"internalType":"bool","name":"floating","type":"bool"},{"internalType":"uint256","name":"principal","type":"uint256"},{"internalType":"uint256","name":"interest","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"}],"internalType":"struct Hash.Order","name":"o","type":"tuple"},{"internalType":"uint256","name":"a","type":"uint256"},{"internalType":"bytes32","name":"k","type":"bytes32"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Sig.Components","name":"c","type":"tuple"}],"name":"fillFloating","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"filled","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"o","type":"bytes32"},{"internalType":"bytes32","name":"a","type":"bytes32"}],"name":"releaseFixed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"o","type":"bytes32"},{"internalType":"bytes32","name":"a","type":"bytes32"}],"name":"releaseFloating","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]
+var swivelContractABI = [
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "key",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "maker",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "underlying",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "floating",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interest",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "duration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Hash.Order[]",
+				"name": "o",
+				"type": "tuple[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "a",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "k",
+				"type": "bytes32"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Sig.Components[]",
+				"name": "c",
+				"type": "tuple[]"
+			}
+		],
+		"name": "batchFillFixed",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "key",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "maker",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "underlying",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "floating",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interest",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "duration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Hash.Order[]",
+				"name": "o",
+				"type": "tuple[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "a",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "k",
+				"type": "bytes32"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Sig.Components[]",
+				"name": "c",
+				"type": "tuple[]"
+			}
+		],
+		"name": "batchFillFloating",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32[]",
+				"name": "o",
+				"type": "bytes32[]"
+			},
+			{
+				"internalType": "bytes32[]",
+				"name": "a",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "batchRelease",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "key",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "maker",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "underlying",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "floating",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interest",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "duration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Hash.Order",
+				"name": "o",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Sig.Components",
+				"name": "c",
+				"type": "tuple"
+			}
+		],
+		"name": "cancel",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "i",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "c",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			}
+		],
+		"name": "Cancel",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "key",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "maker",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "underlying",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "floating",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interest",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "duration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Hash.Order",
+				"name": "o",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "a",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "k",
+				"type": "bytes32"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Sig.Components",
+				"name": "c",
+				"type": "tuple"
+			}
+		],
+		"name": "fillFixed",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "key",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "maker",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "underlying",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "floating",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "principal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interest",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "duration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Hash.Order",
+				"name": "o",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "a",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "k",
+				"type": "bytes32"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Sig.Components",
+				"name": "c",
+				"type": "tuple"
+			}
+		],
+		"name": "fillFloating",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "orderKey",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "agreementKey",
+				"type": "bytes32"
+			}
+		],
+		"name": "Initiate",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "orderKey",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "agreementKey",
+				"type": "bytes32"
+			}
+		],
+		"name": "Release",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "o",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "a",
+				"type": "bytes32"
+			}
+		],
+		"name": "releaseFixed",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "o",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "a",
+				"type": "bytes32"
+			}
+		],
+		"name": "releaseFloating",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "agreements",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "maker",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "taker",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "underlying",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "floating",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "released",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "rate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "principal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "interest",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "duration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "release",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "cancelled",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "CTOKEN",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "DOMAIN",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "filled",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "NAME",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "VERSION",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
 
 var erc20ABI = [{"constant": false,"inputs": [{"internalType": "address","name": "","type": "address"},{"internalType": "uint256","name": "","type": "uint256"}],"name": "approve","outputs": [{"internalType": "bool","name": "","type": "bool"}],"payable": false,"stateMutability": "nonpayable","type": "function"},{"constant": false,"inputs": [{"internalType": "address","name": "_owner","type": "address"}],"name": "balanceOf","outputs": [{"internalType": "uint256","name": "balance","type": "uint256"}],"payable": false,"stateMutability": "nonpayable","type": "function"},{"constant": false,"inputs": [{"internalType": "address","name": "","type": "address"},{"internalType": "uint256","name": "","type": "uint256"}],"name": "transfer","outputs": [{"internalType": "bool","name": "","type": "bool"}],"payable": false,"stateMutability": "nonpayable","type": "function"},{"constant": false,"inputs": [{"internalType": "address","name": "sender","type": "address"},{"internalType": "address","name": "recipient","type": "address"},{"internalType": "uint256","name": "amount","type": "uint256"}],"name": "transferFrom","outputs": [{"internalType": "bool","name": "","type": "bool"}],"payable": false,"stateMutability": "nonpayable","type": "function"}];
  
 // Swivel Address
-var swivelContractAddress = "0x416D738C564C2062F22Af6232406899C6bc72AAe";
+var swivelContractAddress = "0x33E17F512a509D592a484BfD34B1B6feD5815658";
 var swivelContract = web3.eth.contract(swivelContractABI).at(swivelContractAddress);
 // Dai Address
-var tokenaddress = '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa';
+var tokenaddress = '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa';
 var tokencontract = web3.eth.contract(erc20ABI).at(tokenaddress);
 
 ///connect to web3 & get default account address
@@ -75,24 +828,26 @@ if (window.ethereum) {
 
 async function createAndTake() { 
 const currentAddress = ethereum.selectedAddress;
+const ethersHash = ethers.utils.sha256(ethers.utils.id(Date.now().toString()+currentAddress));
+console.log('ethersHash: ' + ethersHash);
 const makerOrderHash = web3.sha3(Math.random().toString());
 const takerOrderHash = web3.sha3('testhash');
-const takerVolume = web3.toWei("3");
+const takerVolume = web3.toWei(".002");
 const msgParams = {
       domain: {
         name: 'Swivel Finance',
         version: '1.0.0',
-        chainId: 5,
-        verifyingContract: '0x416D738C564C2062F22Af6232406899C6bc72AAe'
+        chainId: 42,
+        verifyingContract: '0x33E17F512a509D592a484BfD34B1B6feD5815658'
       },
       message: {
       key: makerOrderHash,
       maker: currentAddress,
-      underlying: '0x84b5ce3eA8CDC1B19Ea1768F1C4075b6937b483b',
-      floating: false,
+      underlying: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
+      floating: true,
       principal: web3.toWei('100'),
-      interest: web3.toWei('5'),
-      duration: '12345',
+      interest: web3.toWei('8.2132'),
+      duration: '31536000',
       expiry: '1615879257',
     },
       primaryType: 'Order',
@@ -103,24 +858,26 @@ const msgParams = {
           { name: 'chainId', type: 'uint256' },
           { name: 'verifyingContract', type: 'address' },
         ],
-	Order: [
-		{ name: 'key', type: 'bytes32' },
-		{ name: 'maker', type: 'address' },
-		{ name: 'underlying', type: 'address' },
-		{ name: 'floating', type: 'bool' },
-		{ name: 'principal', type: 'uint256' },
-		{ name: 'interest', type: 'uint256' },
-		{ name: 'duration', type: 'uint256' },
-		{ name: 'expiry', type: 'uint256' },
+		Order: [
+			{ name: 'key', type: 'bytes32' },
+			{ name: 'maker', type: 'address' },
+			{ name: 'underlying', type: 'address' },
+			{ name: 'floating', type: 'bool' },
+			{ name: 'principal', type: 'uint256' },
+			{ name: 'interest', type: 'uint256' },
+			{ name: 'duration', type: 'uint256' },
+			{ name: 'expiry', type: 'uint256' },
 	]
-      },
+      }
     }
+	console.log(msgParams);
     try {
       const signature = await ethereum.request({
         method: 'eth_signTypedData_v4',
         params: [currentAddress, JSON.stringify(msgParams)],
       })
 		console.log(signature);
+		console.log(msgParams);
 		const split = EthJS.Util.fromRpcSig(signature);
 		console.log(split);
 
@@ -150,10 +907,9 @@ const msgParams = {
 }		
 
 function approveERC (type) {
-tokencontract.approve('0x416D738C564C2062F22Af6232406899C6bc72AAe', '10000000000000000000000000000000000000000000000000', function (error, result) {console.log(result)});
+tokencontract.approve('0x33E17F512a509D592a484BfD34B1B6feD5815658', '10000000000000000000000000000000000000000000000000', function (error, result) {console.log(result)});
 
 }
-
 
 
     </script>
